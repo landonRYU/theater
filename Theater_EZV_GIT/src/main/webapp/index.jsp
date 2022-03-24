@@ -82,7 +82,7 @@
 			        <li><a onclick = "changeView(1)">회원가입</a></li>
 			        <li><a onclick = "changeView(2)">VOC</a></li>
 			        <li><a onclick = "changeView(3)">회원정보관리하기</a></li>
-			        <li><a onclick = "changeView(4)">나의정보관리</a></li>
+			        <li><a onclick = "changeView(4)">나의정보관리하기</a></li>
 	      		</ul>
 			</nav>
 		<section>
