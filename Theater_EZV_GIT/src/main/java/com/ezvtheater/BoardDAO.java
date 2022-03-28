@@ -145,4 +145,50 @@ public class BoardDAO {
 		pstmt.executeUpdate();
 		condb.close(con, pstmt);		
 	}
+	
+	public int getAllCount() throws Exception{
+		con = getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count = 0;
+		pstmt = con.prepareStatement("select count(*) from review");
+		rs = pstmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+	return count; 	
+	}
+	
+	public ArrayList<BoardVO> getBoardAll(int startRow, int endRow) throws Exception {
+		ArrayList<BoardVO> arrBvo = new ArrayList<BoardVO>();
+		//rownum : 쿼리 결과로 나오는 각각의 행들의 순서값, 특정 갯수의 그 이하의 행을 선택할때 사용.
+		//rowid : 테이블에 저장된 각각의 행들의 주소값을 말합니다.
+		//가장 최신글을 가져오려면 rownum을 기준으로 Rnum이 startRow보다 크고 endRow보다 작은 경우에는 해당 행을 가져온다.
+			
+			
+		con = getConnection();
+		PreparedStatement pstmt = con.prepareStatement("select * from (select A.*, rownum Rnum from (select * from review order by ref desc, re_step asc)A) where Rnum >=? and Rnum <=?");
+		pstmt.setInt(1, startRow);
+		pstmt.setInt(2, endRow);
+		ResultSet rs = pstmt.executeQuery();
+		 
+		while (rs.next()) {
+			BoardVO bvo = new BoardVO();
+			bvo.setNum(rs.getInt("num"));
+			bvo.setWriter(rs.getString("writer"));
+			bvo.setEmail(rs.getString("email"));
+			bvo.setTitle(rs.getString("title"));
+			bvo.setPw(rs.getString("pw"));
+			bvo.setRegDate(rs.getString("regdate"));
+			bvo.setRef(rs.getInt("ref"));
+			bvo.setRe_step(rs.getInt("re_step"));
+			bvo.setRe_level(rs.getInt("re_level"));
+			bvo.setReadCount(rs.getInt("readcount"));
+			bvo.setContent(rs.getString("content"));
+			arrBvo.add(bvo);
+		}
+		condb.close(con, pstmt, rs);
+		return arrBvo;
+		
+	}
 }
